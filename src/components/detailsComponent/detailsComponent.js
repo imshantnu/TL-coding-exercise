@@ -1,7 +1,12 @@
 import * as React from "react";
+import { AppContext } from "../../context/appContext";
 
 const DetailsComponent = props => {
-  return <div className={props.className}>helll</div>;
+  const appContext = React.useContext(AppContext);
+
+  return (
+    <div className={props.className}>{JSON.stringify(appContext.selected)}</div>
+  );
 };
 
 export default DetailsComponent;

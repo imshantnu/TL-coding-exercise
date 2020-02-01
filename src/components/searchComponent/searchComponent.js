@@ -1,51 +1,53 @@
 import * as React from "react";
-import _ from "lodash";
 import InputComponent from "../inputComponent/inputComponent";
 import ButtonComponent from "../buttonComponent/buttonComponent";
 import { AppContext } from "../../context/appContext";
+import { SearchSuggestionsComponent } from "../searchSuggestionsComponent/searchSuggestionsComponent";
 
 const SearchComponent = props => {
   const appContext = React.useContext(AppContext);
 
-  const onKeyUp = React.useCallback(
+  const onSubmitByName = React.useCallback(
     event => {
-      event.persist();
-      _.debounce(event => {
-        if (event.target.value) {
-          appContext.lookup(event.target.value);
-        }
-      }, 1000)(event);
+      event.preventDefault();
+      appContext.fetchByName(event.target.search.value);
     },
     [appContext]
   );
 
-  const onSubmit = React.useCallback(
+  const onSubmitByABN = React.useCallback(
     event => {
       event.preventDefault();
-      appContext.search(event.target.search.value);
+      appContext.fetchByABN(event.target.abn.value);
     },
     [appContext]
   );
 
   return (
     <div className={props.className}>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmitByName}>
         <InputComponent
-          onKeyUp={onKeyUp}
+          type="text"
           name="search"
           placeholder="Search by name"
           aria-label="Search by company name"
+          autoComplete="off"
         />
         <ButtonComponent type="submit">Search</ButtonComponent>
       </form>
 
-      <ul>
-        {appContext.suggestions.map(suggestion => (
-          <li>
-            <a>{suggestion.Name}</a>
-          </li>
-        ))}
-      </ul>
+      <form onSubmit={onSubmitByABN}>
+        <InputComponent
+          type="number"
+          name="abn"
+          placeholder="Search by ABN"
+          aria-label="Search by ABN"
+          autoComplete="off"
+        />
+        <ButtonComponent type="submit">Search</ButtonComponent>
+      </form>
+
+      <SearchSuggestionsComponent />
     </div>
   );
 };

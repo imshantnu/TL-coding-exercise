@@ -1,7 +1,7 @@
 import React from "react";
 
-const InputComponent = ({ onKeyUp, ...rest }) => {
-  return <input type="text" onKeyUp={e => onKeyUp(e)} {...rest} />;
+const InputComponent = props => {
+  return <input {...props} />;
 };
 
 export default InputComponent;

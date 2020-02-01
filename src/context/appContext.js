@@ -1,17 +1,18 @@
 import React, { Component } from "react";
+import fetchJsonp from "fetch-jsonp";
 const API_GUID = "b6242120-5bce-4b10-9839-d3045a7682da";
-const API_HOST = "https://abr.business.gov.au/json";
 
 export const AppContext = React.createContext();
 
 export class ContextProvider extends Component {
   state = {
     selected: undefined,
+    message: "",
     suggestions: [],
-    results: [],
     processing: false,
-    lookup: this.lookup.bind(this),
-    search: this.search.bind(this)
+    fetchByName: this.fetchByName.bind(this),
+    fetchByABN: this.fetchByABN.bind(this),
+    select: this.select.bind(this)
   };
 
   render() {
@@ -22,35 +23,62 @@ export class ContextProvider extends Component {
     );
   }
 
-  lookup(query) {
-    this.suggestions = this.fetchByName(query, 10).then(
-      response => response.Names
-    );
-    this.processing = false;
+  select(suggestion) {
+    this.setState({ selected: suggestion });
   }
 
-  search(query, byName = true) {
-    if (byName) {
-      this.fetchByName(query);
-    } else {
-      this.fetchByABN(query);
-    }
-  }
-
-  async fetchByName(query, maxResults = 99) {
-    this.processing = true;
-    const response = await fetch(
-      `${API_HOST}/MatchingNames.aspx?name=${encodeURI(
+  fetchByName(query, maxResults = 10) {
+    this.setState({ processing: true });
+    fetchJsonp(
+      `/json/MatchingNames.aspx?name=${encodeURI(
         query
       )}&maxResults=${maxResults}&guid=${API_GUID}`
-    );
-    const responseText = await response.text();
-    const match = responseText.match(/\?\((.*)\);/);
-    if (!match) throw new Error("invalid JSONP response");
-    return JSON.parse(match[1]);
+    )
+      .then(response => response.json())
+      .then(response => {
+        if (!response.Names.length) {
+          throw "No businesses found";
+        }
+
+        this.setState({
+          suggestions: response.Names,
+          message: response.Message,
+          processing: false
+        });
+      })
+      .catch(error => {
+        this.setState({
+          suggestions: [],
+          message: error,
+          processing: false
+        });
+      });
   }
 
-  fetchByABN(abn) {}
+  fetchByABN(abn) {
+    this.setState({ processing: true });
+    fetchJsonp(`/json/AbnDetails.aspx?abn=${encodeURI(abn)}&guid=${API_GUID}`)
+      .then(response => response.json())
+      .then(response => {
+        if (!response.Abn) {
+          throw response.Message;
+        }
+
+        this.setState({
+          suggestions: [],
+          selected: response,
+          message: response.Message,
+          processing: false
+        });
+      })
+      .catch(error => {
+        this.setState({
+          suggestions: [],
+          message: error,
+          processing: false
+        });
+      });
+  }
 }
 
 export const ContextConsumer = AppContext.Consumer;
