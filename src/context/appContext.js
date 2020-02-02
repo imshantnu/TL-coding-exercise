@@ -33,7 +33,7 @@ export class ContextProvider extends Component {
             .then(response => response.json())
             .then(response => {
                 if (!response.Names.length) {
-                    throw 'No businesses found';
+                    throw new Error('No businesses found');
                 }
 
                 this.setState({
@@ -45,7 +45,7 @@ export class ContextProvider extends Component {
             .catch(error => {
                 this.setState({
                     suggestions: [],
-                    message: error,
+                    message: error.message,
                     processing: false
                 });
             });
@@ -57,7 +57,7 @@ export class ContextProvider extends Component {
             .then(response => response.json())
             .then(response => {
                 if (!response.Abn) {
-                    throw response.Message;
+                    throw new Error(response.Message);
                 }
 
                 this.setState({
@@ -68,7 +68,7 @@ export class ContextProvider extends Component {
             })
             .catch(error => {
                 this.setState({
-                    message: error,
+                    message: error.message,
                     processing: false
                 });
             });

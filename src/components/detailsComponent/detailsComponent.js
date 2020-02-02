@@ -15,7 +15,7 @@ const DetailsComponent = props => {
         }
 
         return String(value);
-    });
+    }, []);
 
     if (!appContext.selected) {
         return null;
@@ -23,7 +23,7 @@ const DetailsComponent = props => {
 
     return (
         <div className={props.className}>
-            <table class="table is-bordered is-fullwidth">
+            <table className="table is-bordered is-fullwidth">
                 <caption>
                     Details of {appContext.selected.Name || appContext.selected.EntityName}
                 </caption>

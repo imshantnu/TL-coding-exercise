@@ -12,7 +12,7 @@ export const SearchSuggestionsComponent = () => {
                 </div>
             )}
 
-            {appContext.message && <p class="notification is-danger">{appContext.message}</p>}
+            {appContext.message && <p className="notification is-danger">{appContext.message}</p>}
 
             {appContext.suggestions.length > 0 && (
                 <ul>
