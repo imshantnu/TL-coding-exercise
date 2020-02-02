@@ -17,7 +17,7 @@ const AppComponent = () => {
 
         <main className="is-full-height columns is-marginless">
           <SearchComponent className="column is-one-third is-radiusless is-scrollable" />
-          <DetailsComponent className="column is-two-thirds  is-main-content" />
+          <DetailsComponent className="column is-two-thirds is-main-content" />
         </main>
       </ContextProvider>
     </>
