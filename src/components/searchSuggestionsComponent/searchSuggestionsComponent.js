@@ -4,23 +4,38 @@ import { AppContext } from "../../context/appContext";
 export const SearchSuggestionsComponent = () => {
   const appContext = React.useContext(AppContext);
 
-  if (appContext.processing) {
-    return <progress className="progress is-small is-primary" max="100" />;
-  }
-
   return (
-    <ul>
-      {appContext.message}
-      {appContext.suggestions.map((suggestion, i) => (
-        <li
-          key={i}
-          onClick={() => {
-            appContext.select(suggestion);
-          }}
-        >
-          <a>{suggestion.Name}</a>
-        </li>
-      ))}
-    </ul>
+    <div className="panel is-shadowless">
+      {appContext.processing && (
+        <div className="loader-wrapper">
+          <i className="loader" />
+        </div>
+      )}
+
+      {appContext.message && (
+        <p class="notification is-danger">{appContext.message}</p>
+      )}
+
+      {appContext.suggestions.length > 0 && (
+        <ul>
+          {appContext.suggestions.map((suggestion, i) => (
+            <li
+              key={i}
+              className={`panel-block is-clickable${
+                appContext.selected &&
+                appContext.selected.Name === suggestion.Name
+                  ? " is-active"
+                  : ""
+              }`}
+              onClick={() => {
+                appContext.select(suggestion);
+              }}
+            >
+              {suggestion.Name}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };

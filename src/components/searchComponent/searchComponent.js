@@ -10,7 +10,7 @@ const SearchComponent = props => {
   const onSubmitByName = React.useCallback(
     event => {
       event.preventDefault();
-      appContext.fetchByName(event.target.search.value);
+      appContext.fetchByName(event.target.search.value, 25);
     },
     [appContext]
   );
@@ -24,27 +24,33 @@ const SearchComponent = props => {
   );
 
   return (
-    <div className={props.className}>
-      <form onSubmit={onSubmitByName}>
+    <div className={`navbar has-background-white-ter ${props.className}`}>
+      <form onSubmit={onSubmitByName} className="field has-addons">
         <InputComponent
           type="text"
           name="search"
           placeholder="Search by name"
           aria-label="Search by company name"
           autoComplete="off"
+          className="input is-primary"
         />
-        <ButtonComponent type="submit">Search</ButtonComponent>
+        <ButtonComponent className="button is-primary" type="submit">
+          Search
+        </ButtonComponent>
       </form>
 
-      <form onSubmit={onSubmitByABN}>
+      <form onSubmit={onSubmitByABN} className="field has-addons">
         <InputComponent
           type="number"
           name="abn"
           placeholder="Search by ABN"
           aria-label="Search by ABN"
           autoComplete="off"
+          className="input is-primary"
         />
-        <ButtonComponent type="submit">Search</ButtonComponent>
+        <ButtonComponent type="submit" className="button is-primary">
+          Search
+        </ButtonComponent>
       </form>
 
       <SearchSuggestionsComponent />

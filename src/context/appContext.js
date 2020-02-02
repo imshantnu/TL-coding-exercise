@@ -28,7 +28,7 @@ export class ContextProvider extends Component {
   }
 
   fetchByName(query, maxResults = 10) {
-    this.setState({ processing: true });
+    this.setState({ processing: true, suggestions: [], message: undefined });
     fetchJsonp(
       `/json/MatchingNames.aspx?name=${encodeURI(
         query
@@ -56,7 +56,7 @@ export class ContextProvider extends Component {
   }
 
   fetchByABN(abn) {
-    this.setState({ processing: true });
+    this.setState({ processing: true, suggestions: [], message: undefined });
     fetchJsonp(`/json/AbnDetails.aspx?abn=${encodeURI(abn)}&guid=${API_GUID}`)
       .then(response => response.json())
       .then(response => {
@@ -65,7 +65,6 @@ export class ContextProvider extends Component {
         }
 
         this.setState({
-          suggestions: [],
           selected: response,
           message: response.Message,
           processing: false
@@ -73,7 +72,6 @@ export class ContextProvider extends Component {
       })
       .catch(error => {
         this.setState({
-          suggestions: [],
           message: error,
           processing: false
         });

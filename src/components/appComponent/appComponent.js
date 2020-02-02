@@ -5,17 +5,22 @@ import { ContextProvider } from "../../context/appContext";
 
 const AppComponent = () => {
   return (
-    <div className="container is-fluid">
-      <header className="box">
-        <h1 className="title is-1">Australian Business Lookup Service</h1>
-      </header>
-      <main className="columns">
-        <ContextProvider>
-          <SearchComponent className="column is-one-third" />
-          <DetailsComponent className="column is-two-thirds" />
-        </ContextProvider>
-      </main>
-    </div>
+    <>
+      <ContextProvider>
+        <header className="is-full navbar is-dark">
+          <div className="navbar-brand">
+            <h1 className="navbar-item title is-4">
+              Australian Business Lookup
+            </h1>
+          </div>
+        </header>
+
+        <main className="is-full-height columns is-marginless">
+          <SearchComponent className="column is-one-third is-radiusless is-scrollable" />
+          <DetailsComponent className="column is-two-thirds  is-main-content" />
+        </main>
+      </ContextProvider>
+    </>
   );
 };
 
